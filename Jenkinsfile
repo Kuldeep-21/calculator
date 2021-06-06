@@ -1,14 +1,43 @@
+
+Skip to content
+Pull requests
+Issues
+Marketplace
+Explore
+@Kuldeep-21
+Kuldeep-21 /
+calculator
+forked from leszko/calculator
+
+0
+0
+
+    79
+
+Code
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+calculator/Jenkinsfile
+@leszko
+leszko Update chapter 8
+Latest commit 44c6179 on 26 May 2019
+History
+2 contributors
+@leszko
+@invalid-email-address
+90 lines (83 sloc) 2.58 KB
 pipeline {
      agent any
      triggers {
           pollSCM('* * * * *')
      }
-     
-    env.AWS_ECR_LOGIN=true
-    def newApp
-    def registry = 'coder21/microservices-node-todo-frontend'
-    def registryCredential = 'Dockerhub'
-     
      stages {
           stage("Compile") {
                steps {
@@ -20,7 +49,12 @@ pipeline {
                     sh "./gradlew test"
                }
           }
-          
+          stage("Code coverage") {
+               steps {
+                    sh "./gradlew jacocoTestReport"
+                    sh "./gradlew jacocoTestCoverageVerification"
+               }
+          }
           stage("Static code analysis") {
                steps {
                     sh "./gradlew checkstyleMain"
@@ -32,19 +66,19 @@ pipeline {
                }
           }
 
-         
-
-          sstage('Building image') {
-        docker.withRegistry( 'https://' + registry, registryCredential ) {
-		    def buildName = registry + ":$BUILD_NUMBER"
-			newApp = docker.build buildName
-			newApp.push()
-        }
-	}
+          
+          stage("Docker login") {
+               steps {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
+                               usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                         sh "docker login --username $USERNAME --password $PASSWORD"
+                    }
+               }
+          }
 
           stage("Docker push") {
                steps {
-                    sh "docker push leszko/calculator"
+                    sh "docker push leszko/calculator:${BUILD_TIMESTAMP}"
                }
           }
 
@@ -84,3 +118,6 @@ pipeline {
           }
      }
 }
+
+    
+
