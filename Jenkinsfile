@@ -26,12 +26,7 @@ pipeline {
                }
           }
 
-          stage("Docker build") {
-               steps {
-                    
-                    sh "sudo docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
-               }
-          }
+         
 
           stage("Docker login") {
                steps {
