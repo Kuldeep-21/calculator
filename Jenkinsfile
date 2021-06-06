@@ -29,7 +29,7 @@ pipeline {
           stage("Docker build") {
                steps {
                     
-                    sh "sudo -S docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
+                    sh "sudo -S Coder@21 docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
                }
           }
 
