@@ -28,8 +28,8 @@ pipeline {
 
           stage("Docker build") {
                steps {
-                    sh "sudo chown root:jenkins /run/docker.sock"
-                    sh "sudo docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
+                    sh "sudo -s chown root:jenkins /run/docker.sock"
+                    sh "sudo -s docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
                }
           }
 
