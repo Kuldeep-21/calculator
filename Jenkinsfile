@@ -3,6 +3,12 @@ pipeline {
      triggers {
           pollSCM('* * * * *')
      }
+     
+    env.AWS_ECR_LOGIN=true
+    def newApp
+    def registry = 'coder21/microservices-node-todo-frontend'
+    def registryCredential = 'Dockerhub'
+     
      stages {
           stage("Compile") {
                steps {
@@ -28,14 +34,13 @@ pipeline {
 
          
 
-          stage("Docker login") {
-               steps {
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
-                               usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                         sh "docker login --username $USERNAME --password $PASSWORD"
-                    }
-               }
-          }
+          sstage('Building image') {
+        docker.withRegistry( 'https://' + registry, registryCredential ) {
+		    def buildName = registry + ":$BUILD_NUMBER"
+			newApp = docker.build buildName
+			newApp.push()
+        }
+	}
 
           stage("Docker push") {
                steps {
