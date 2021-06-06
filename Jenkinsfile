@@ -1,38 +1,4 @@
 
-Skip to content
-Pull requests
-Issues
-Marketplace
-Explore
-@Kuldeep-21
-Kuldeep-21 /
-calculator
-forked from leszko/calculator
-
-0
-0
-
-    79
-
-Code
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-
-    Settings
-
-calculator/Jenkinsfile
-@leszko
-leszko Update chapter 8
-Latest commit 44c6179 on 26 May 2019
-History
-2 contributors
-@leszko
-@invalid-email-address
-90 lines (83 sloc) 2.58 KB
 pipeline {
      agent any
      triggers {
